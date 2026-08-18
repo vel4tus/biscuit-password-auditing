@@ -8,13 +8,13 @@ import output as output_templates
 import calculations
 
 
-def refresh_progress(candidates_tested: int, total_candidates: int, execution_stopwatch: float, refresh_timestamp: float, candidates_tested_temp: int, stop: bool):
+def refresh_progress(candidates_tested: int, total_candidates: int, execution_stopwatch: float, last_refresh_time: float, previous_candidates_tested: int, stop: bool):
     time_elapsed = output_templates.time_formatter(time.perf_counter() - execution_stopwatch)
 
     if stop:
         speed = 0
     else:
-        speed = calculations.speed_calc(candidates_tested, candidates_tested_temp, refresh_timestamp, time.perf_counter())
+        speed = calculations.speed_calc(candidates_tested, previous_candidates_tested, last_refresh_time, time.perf_counter())
 
     if stop:
         time_remaining = output_templates.time_formatter(0)
@@ -23,7 +23,7 @@ def refresh_progress(candidates_tested: int, total_candidates: int, execution_st
     
     print("\033[4A\r" + output_templates.dictionary_mode_progress(candidates_tested, total_candidates, time_elapsed, speed, time_remaining))
     
-    return [time.perf_counter(), candidates_tested]
+    return time.perf_counter(), candidates_tested
 
 
 # Main dictionary attack function
@@ -44,7 +44,7 @@ def dictionary_attack(target_hash: str, algorithm: str, wordlist: str, output: s
     
     # Performance counters
     execution_stopwatch = time.perf_counter()
-    refresh_timestamp = time.perf_counter()
+    last_refresh_time = time.perf_counter()
 
     # Wordlist file opening
     with wordlist_path.open(mode="r", encoding="UTF-8") as file:
@@ -55,7 +55,7 @@ def dictionary_attack(target_hash: str, algorithm: str, wordlist: str, output: s
         time_elapsed = "None"
         speed = 0
         time_remaining = "None"
-        candidates_tested_temp = 0
+        previous_candidates_tested = 0
 
         print(output_templates.dictionary_mode_progress(candidates_tested, total_candidates, time_elapsed, speed, time_remaining))
 
@@ -65,14 +65,14 @@ def dictionary_attack(target_hash: str, algorithm: str, wordlist: str, output: s
             candidates_tested += 1
 
             if target_digest == compute_hash(candidate, algorithm):
-                refresh_progress(candidates_tested, total_candidates, execution_stopwatch, refresh_timestamp, candidates_tested_temp, True)
+                refresh_progress(candidates_tested, total_candidates, execution_stopwatch, last_refresh_time, previous_candidates_tested, True)
                 print(f"\nPassword found: {candidate}")
                 return
 
             # refresh progress
-            if time.perf_counter() - refresh_timestamp >= config.REFRESH_INTERVAL:
-                [refresh_timestamp, candidates_tested_temp] = refresh_progress(candidates_tested, total_candidates, execution_stopwatch, refresh_timestamp, candidates_tested_temp, False)
+            if time.perf_counter() - last_refresh_time >= config.REFRESH_INTERVAL:
+                last_refresh_time, previous_candidates_tested = refresh_progress(candidates_tested, total_candidates, execution_stopwatch, last_refresh_time, previous_candidates_tested, False)
 
-        refresh_progress(candidates_tested, total_candidates, execution_stopwatch, refresh_timestamp, candidates_tested_temp, True)
+        refresh_progress(candidates_tested, total_candidates, execution_stopwatch, last_refresh_time, previous_candidates_tested, True)
 
         print()

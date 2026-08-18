@@ -19,7 +19,7 @@ Offline password hash auditing & recovery tool
 
 
 def dictionary_mode_parameters(target_hash: str, algorithm: str, wordlist: str, output: str) -> str:
-    return f'''ESC[2KMODE:       Dictionary Attack
+    return f'''MODE:       Dictionary Attack
 HASH:       {target_hash}
 ALGORITHM:  {algorithm}
 WORDLIST:   {wordlist}

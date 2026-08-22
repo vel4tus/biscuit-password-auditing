@@ -1,6 +1,6 @@
 # hashgen.py
 
-from hashing import compute_hash
+from biscuit.hashing import compute_hash
 
 
 def main(password: str, algorithm: str) -> None:

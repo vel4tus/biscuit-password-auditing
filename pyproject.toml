@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Biscuit"
+version = "0.1.0"
+authors = [
+  { name="vel4tus", email="vel4tus@proton.me" },
+]
+description = "Offline password hash auditing & recovery tool"
+readme = "README.md"
+requires-python = ">=3"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["password", "hash", "auditing", "password recovery", "hashing", "password cracking"]
+
+[project.urls]
+Repository = "https://github.com/vel4tus/biscuit-password-auditing"
+
+[project.scripts]
+biscuit = "biscuit.CLI:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

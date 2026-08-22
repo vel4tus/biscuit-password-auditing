@@ -1,4 +1,4 @@
-from CLI import main
+from biscuit.CLI import main
 
 if __name__ == "__main__":
     main()

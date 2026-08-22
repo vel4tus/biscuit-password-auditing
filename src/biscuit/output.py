@@ -2,6 +2,9 @@
 
 import time
 
+# ==============================
+#   Program's start-up header   
+# ==============================
 
 def header() -> str:
     return '''
@@ -17,9 +20,42 @@ Offline password hash auditing & recovery tool
 ! Authorized use only !
 '''
 
+# ==============================
+#         Common outputs        
+# ==============================
+
+def help_output() -> str:
+    return '''usage: biscuit [-h] {dictionary,brute-force,spray,hash-gen} ...
+
+Offline password hash auditing & recovery tool
+
+! Authorized use only !
+
+modes:
+
+  attacks:
+    dictionary   Test passwords from a wordlist against a target hash
+    brute-force  Generate and test passwords across a defined keyspace
+    spray        Test a password against multiple target hashes
+
+  utilities:
+    hash-gen     Generate a hash from a given password and algorithm
+
+options:
+  -h, --help     Show this help message and exit
+
+Use 'biscuit <mode> --help' for more information about a specific mode.
+
+Examples:
+  biscuit dictionary --hash <HASH> --algorithm sha256
+  biscuit brute-force --hash <HASH> --algorithm sha256 --charset alphanumeric --min-length 6 --max-length 8
+  biscuit spray ...
+  biscuit hash-gen --password <PASSWORD> --algorithm sha256'''
+
 
 def state(state: str) -> str:
     return f'''\033[2KState: {state}'''
+
 
 def result(success: bool, password: str | None) -> str:
     if success:
@@ -29,7 +65,7 @@ def result(success: bool, password: str | None) -> str:
         return f'''Result: Password not found'''
 
 # ==============================
-#    Dictionary mode outputs   
+#    Dictionary mode outputs    
 # ==============================
 
 def dictionary_mode_parameters(target_hash: str, algorithm: str, wordlist: str, output: str) -> str:
@@ -46,22 +82,9 @@ def dictionary_mode_progress(candidates_tested: int, total_candidates: int, time
 \033[2KSpeed:              {speed} candidates/sec
 \033[2KTime remaining:     {time_remaining}'''
 
-
-def dictionary_mode_state(state: str) -> str:
-    return f'''\033[2KState: {state}'''
-
-def dictionary_mode_result(success: bool, password: str | None) -> str:
-    if success:
-        return f'''Result: Password found\nPassword: {password}'''
-
-    if not success:
-        return f'''Result: Password not found'''
-
-
 # ==============================
-#    Brute-force mode outputs 
+#    Brute-force mode outputs   
 # ==============================
-
 
 def bruteforce_mode_parameters(target_hash: str, algorithm: str, charset: str, min_length: int, max_length: int, output: str):
     return f'''MODE:       Brute-force Attack
@@ -78,6 +101,9 @@ def bruteforce_mode_progress(combinations_tested: int, total_combinations: int, 
 \033[2KSpeed:                {speed} candidates/sec
 \033[2KTime remaining:       {time_remaining}'''
 
+# ==============================
+#         Time formatter        
+# ==============================
 
 def time_formatter(time: int | float | None) -> str:
     if time is None:

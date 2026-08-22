@@ -1,7 +1,7 @@
 # bruteforce.py
 
 import time
-import output as output_templates
+import biscuit.output as output_templates
 
 # Main brute-force attack function
 def main(target_hash: str, algorithm: str, charset: str, min_length: int, max_length: int, output: str):

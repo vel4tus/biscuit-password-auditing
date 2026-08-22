@@ -18,6 +18,20 @@ Offline password hash auditing & recovery tool
 '''
 
 
+def state(state: str) -> str:
+    return f'''\033[2KState: {state}'''
+
+def result(success: bool, password: str | None) -> str:
+    if success:
+        return f'''Result: Password found\nPassword: {password}'''
+
+    if not success:
+        return f'''Result: Password not found'''
+
+# ==============================
+#    Dictionary mode outputs   
+# ==============================
+
 def dictionary_mode_parameters(target_hash: str, algorithm: str, wordlist: str, output: str) -> str:
     return f'''MODE:       Dictionary Attack
 HASH:       {target_hash}
@@ -31,6 +45,22 @@ def dictionary_mode_progress(candidates_tested: int, total_candidates: int, time
 \033[2KTime elapsed:       {time_elapsed}
 \033[2KSpeed:              {speed} candidates/sec
 \033[2KTime remaining:     {time_remaining}'''
+
+
+def dictionary_mode_state(state: str) -> str:
+    return f'''\033[2KState: {state}'''
+
+def dictionary_mode_result(success: bool, password: str | None) -> str:
+    if success:
+        return f'''Result: Password found\nPassword: {password}'''
+
+    if not success:
+        return f'''Result: Password not found'''
+
+
+# ==============================
+#    Brute-force mode outputs 
+# ==============================
 
 
 def bruteforce_mode_parameters(target_hash: str, algorithm: str, charset: str, min_length: int, max_length: int, output: str):

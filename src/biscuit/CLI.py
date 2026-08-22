@@ -3,7 +3,6 @@
 import argparse
 import config
 from modes import dictionary, bruteforce, hashgen
-import output as output_templates
 
 # CLI implementation using argparse
 parser = argparse.ArgumentParser(

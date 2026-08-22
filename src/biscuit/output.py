@@ -34,15 +34,15 @@ Offline password hash auditing & recovery tool
 modes:
 
   attacks:
-    dictionary   Test passwords from a wordlist against a target hash
-    brute-force  Generate and test passwords across a defined keyspace
-    spray        Test a password against multiple target hashes
+    dictionary, dict  Test passwords from a wordlist against a target hash
+    brute-force, bf   Generate and test passwords across a defined keyspace
+    spray             Test a password against multiple target hashes
 
   utilities:
-    hash-gen     Generate a hash from a given password and algorithm
+    hash-gen, hg      Generate a hash from a given password and algorithm
 
 options:
-  -h, --help     Show this help message and exit
+  -h, --help          Show this help message and exit
 
 Use 'biscuit <mode> --help' for more information about a specific mode.
 

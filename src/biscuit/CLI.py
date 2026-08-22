@@ -20,17 +20,17 @@ parser.add_argument("--help", "-h", action="store_true")
 subparsers = parser.add_subparsers(title="biscuit.modes", dest="mode", help=output_templates.help_output())
 
 # Dicitonary attack parser
-dictionary_parser = subparsers.add_parser(name="dictionary", description="Test passwords from a wordlist against a target hash", help="Dictionary Attack")
+dictionary_parser = subparsers.add_parser(name="dictionary", aliases=["dict"], description="Test passwords from a wordlist against a target hash", help="Dictionary Attack")
 dictionary_parser.add_argument("--hash", help="Target password hash", required=True)
-dictionary_parser.add_argument("--algorithm", help="Algorithm used to hash candidates", choices=biscuit.config.HASH_ALGORITHMS, required=True)
-dictionary_parser.add_argument("--wordlist", help="Wordlist to use. Default: NCSC-100K", choices=biscuit.config.WORDLISTS, default="NCSC-100K")
-dictionary_parser.add_argument("--output", help="Output file. If omitted, print results to the terminal", metavar="PATH")
+dictionary_parser.add_argument("--algorithm", "-a", help="Algorithm used to hash candidates", choices=biscuit.config.HASH_ALGORITHMS, required=True)
+dictionary_parser.add_argument("--wordlist", "-w", help="Wordlist to use. Default: NCSC-100K", choices=biscuit.config.WORDLISTS, default="NCSC-100K")
+dictionary_parser.add_argument("--output", "-o", help="Output file. If omitted, print results to the terminal", metavar="PATH")
 # Salt support - WIP
 # dictionary_parser.add_argument("--salt")
 # dictionary_parser.add_argument("--salt-position", choices=["prefix", "suffix"], default="suffix")
 
 # Brute-force attack parser
-bruteforce_parser = subparsers.add_parser(name="brute-force", description="Generate and test passwords across a defined keyspace", help="Brute-force Attack")
+bruteforce_parser = subparsers.add_parser(name="brute-force", aliases=["bf"], description="Generate and test passwords across a defined keyspace", help="Brute-force Attack")
 bruteforce_parser.add_argument("--hash", help="Target password hash", required=True)
 bruteforce_parser.add_argument("--algorithm", help="Algorithm used to hash candidates", choices=biscuit.config.HASH_ALGORITHMS, required=True)
 bruteforce_parser.add_argument("--charset", help="Character set used to generate hash candidates")
@@ -45,24 +45,22 @@ bruteforce_parser.add_argument("--output", help="Output file. If omitted, print 
 spray_parser = subparsers.add_parser(name="spray", description="Tests a password against multiple target hashes", help="Password Spraying Attack")
 
 # Hash generation parser
-hashgen_parser = subparsers.add_parser(name="hash-gen", description="Generate a hash with a given password and algorithm", help="Hash generator")
+hashgen_parser = subparsers.add_parser(name="hash-gen", aliases=["hg"], description="Generate a hash with a given password and algorithm", help="Hash generator")
 hashgen_parser.add_argument("--password", help="Password to hash", required=True)
 hashgen_parser.add_argument("--algorithm", help="Algorithm used to hash the password", choices=biscuit.config.HASH_ALGORITHMS, required=True)
 
 
 def main():
     args = parser.parse_args()
-
     if args.help:
         print(output_templates.help_output())
-        
     else:
         match args.mode:
-            case "dictionary":
+            case "dictionary" | "dict":
                 dictionary.main(args.hash, args.algorithm, args.wordlist, args.output)
-            case "brute-force":
+            case "brute-force" | "bf":
                 bruteforce.main(args.hash, args.algorithm, args.charset, args.min_length, args.max_length, args.output)
             case "spray":
                 pass
-            case "hash-gen":
+            case "hash-gen" | "hg":
                 hashgen.main(args.password, args.algorithm)

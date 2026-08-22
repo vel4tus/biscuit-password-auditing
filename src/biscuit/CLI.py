@@ -21,40 +21,40 @@ parser.add_argument("--help", "-h", action="store_true")
 subparsers = parser.add_subparsers(title="biscuit.modes", dest="mode", help=output_templates.help_output())
 
 # Dicitonary attack parser
-dictionary_parser = subparsers.add_parser(name="dictionary", aliases=["dict"], description=CONST.DICTIONARY_DESCRIPTION)
-dictionary_parser.add_argument("--hash", "-H", help="Target password hash", required=True)
-dictionary_parser.add_argument("--algorithm", "-a", help="Algorithm used to hash candidates", choices=biscuit.config.HASH_ALGORITHMS, required=True)
-dictionary_parser.add_argument("--wordlist", "-w", help="Wordlist to use. Default: NCSC-100K", choices=biscuit.config.WORDLISTS, default="NCSC-100K")
-dictionary_parser.add_argument("--output", "-o", help="Output file. If omitted, print results to the terminal", metavar="PATH")
+dictionary_parser = subparsers.add_parser(name="dictionary", aliases=["dict"], description=CONST.MODE_DICTIONARY_DESCRIPTION)
+dictionary_parser.add_argument("--hash", "-H", help=CONST.ARGS_HASH_DESCRIPTION, required=True)
+dictionary_parser.add_argument("--algorithm", "-a", help=CONST.ARGS_ALGORITHM_DESCRIPTION, choices=biscuit.config.HASH_ALGORITHMS, required=True)
+dictionary_parser.add_argument("--wordlist", "-w", help=CONST.ARGS_WORDLIST_DESCRIPTION, choices=biscuit.config.WORDLISTS, default="NCSC-100K")
+dictionary_parser.add_argument("--output", "-o", help=CONST.ARGS_OUTPUT_DESCRIPTION, metavar="PATH")
 # Salt support - WIP
 # dictionary_parser.add_argument("--salt")
 # dictionary_parser.add_argument("--salt-position", choices=["prefix", "suffix"], default="suffix")
 
 # Brute-force attack parser
-bruteforce_parser = subparsers.add_parser(name="brute-force", aliases=["bf"], description=CONST.BRUTEFORCE_DESCRIPTION)
-bruteforce_parser.add_argument("--hash", "-H", help="Target password hash", required=True)
-bruteforce_parser.add_argument("--algorithm", "-a", help="Algorithm used to hash candidates", choices=biscuit.config.HASH_ALGORITHMS, required=True)
-bruteforce_parser.add_argument("--charset", "-c", required=True, choices=biscuit.config.CHARSET, help="Character set used to generate hash candidates")
-bruteforce_parser.add_argument("--min-length", "-m", type=int, required=True, help="Minimum password length of generated hash candidates", dest="min_length")
-bruteforce_parser.add_argument("--max-length", "-M", type=int, required=True, help="Maximum password length of generated hash candidates", dest="max_length")
-bruteforce_parser.add_argument("--output", "-o", help="Output file. If omitted, print results to the terminal", metavar="PATH")
+bruteforce_parser = subparsers.add_parser(name="brute-force", aliases=["bf"], description=CONST.MODE_BRUTEFORCE_DESCRIPTION)
+bruteforce_parser.add_argument("--hash", "-H", help=CONST.ARGS_HASH_DESCRIPTION, required=True)
+bruteforce_parser.add_argument("--algorithm", "-a", help=CONST.ARGS_ALGORITHM_DESCRIPTION, choices=biscuit.config.HASH_ALGORITHMS, required=True)
+bruteforce_parser.add_argument("--charset", "-c", required=True, choices=biscuit.config.CHARSET, help=CONST.ARGS_CHARSET_DESCRIPTION)
+bruteforce_parser.add_argument("--min-length", "-m", type=int, required=True, help=CONST.ARGS_MIN_LENGTH_DESCRIPTION, dest="min_length")
+bruteforce_parser.add_argument("--max-length", "-M", type=int, required=True, help=CONST.ARGS_MIN_LENGTH_DESCRIPTION, dest="max_length")
+bruteforce_parser.add_argument("--output", "-o", help=CONST.ARGS_OUTPUT_DESCRIPTION, metavar="PATH")
 # Salt support - WIP
 # dictionary_parser.add_argument("--salt")
 # dictionary_parser.add_argument("--salt-position", choices=["prefix", "suffix"], default="suffix")
 
 # Password spraying attack parser
-spray_parser = subparsers.add_parser(name="spray", description=CONST.SPRAY_DESCRIPTION)
+spray_parser = subparsers.add_parser(name="spray", description=CONST.MODE_SPRAY_DESCRIPTION, add_help=False)
 
 # Hash generation parser
-hashgen_parser = subparsers.add_parser(name="hash-gen", aliases=["hg"], description=CONST.HASHGEN_DESCRIPTION)
-hashgen_parser.add_argument("--password", "-P", help="Password to hash", required=True)
-hashgen_parser.add_argument("--algorithm", "-a", help="Algorithm used to hash the password", choices=biscuit.config.HASH_ALGORITHMS, required=True)
+hashgen_parser = subparsers.add_parser(name="hash-gen", aliases=["hg"], description=CONST.MODE_HASHGEN_DESCRIPTION)
+hashgen_parser.add_argument("--password", "-P", help=CONST.ARGS_PASSWORD_DESCRIPTION, required=True)
+hashgen_parser.add_argument("--algorithm", "-a", help=CONST.ARGS_ALGORITHM_DESCRIPTION, choices=biscuit.config.HASH_ALGORITHMS)
 
 
 def main():
     args = parser.parse_args()
 
-    if args.help:
+    if args.help or not args.mode:
         print(output_templates.help_output())
 
     else:

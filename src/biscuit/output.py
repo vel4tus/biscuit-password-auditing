@@ -19,12 +19,12 @@ Offline password hash auditing & recovery tool
 Modes:
 
   Attacks:
-    dictionary, dict  {CONST.DICTIONARY_DESCRIPTION}
-    brute-force, bf   {CONST.BRUTEFORCE_DESCRIPTION}
-    spray             {CONST.SPRAY_DESCRIPTION}
+    dictionary, dict  {CONST.MODE_DICTIONARY_DESCRIPTION}
+    brute-force, bf   {CONST.MODE_BRUTEFORCE_DESCRIPTION}
+    spray             {CONST.MODE_SPRAY_DESCRIPTION}
 
   Utilities:
-    hash-gen, hg      {CONST.HASHGEN_DESCRIPTION}
+    hash-gen, hg      {CONST.MODE_HASHGEN_DESCRIPTION}
 
 Options:
   -h, --help          {CONST.HELP_DESCRIPTION}

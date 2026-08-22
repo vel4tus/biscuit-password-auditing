@@ -1,3 +1,5 @@
+# hashgen.py
+
 from hashing import compute_hash
 
 

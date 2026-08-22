@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Biscuit"
-version = "0.1.0"
+version = ["version"]
 authors = [
   { name="vel4tus", email="vel4tus@proton.me" },
 ]

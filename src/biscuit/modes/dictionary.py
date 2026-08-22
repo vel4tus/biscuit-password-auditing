@@ -6,6 +6,7 @@ from biscuit.hashing import compute_hash
 import biscuit.config
 import biscuit.output as output_templates
 import biscuit.calculations
+import biscuit.constants
 
 
 # Progress refresh system. Refreshes every <biscuit.config.REFRESH_INTERVAL> seconds.
@@ -29,7 +30,7 @@ def refresh_progress(candidates_tested: int, total_candidates: int, execution_st
 
 # Main dictionary attack function
 def main(target_hash: str, algorithm: str, wordlist: str, output: str) -> None:
-    print(output_templates.header())
+    print(biscuit.constants.HEADER)
     print(output_templates.dictionary_mode_parameters(target_hash, algorithm, wordlist, output) + "\n")
 
     # Wordlist path handler

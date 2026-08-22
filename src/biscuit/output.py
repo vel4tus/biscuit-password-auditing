@@ -1,48 +1,33 @@
 # output.py
 
 import time
-
-# ==============================
-#   Program's start-up header   
-# ==============================
-
-def header() -> str:
-    return '''
-██████╗ ██╗███████╗ ██████╗██╗   ██╗██╗████████╗
-██╔══██╗██║██╔════╝██╔════╝██║   ██║██║╚══██╔══╝
-██████╔╝██║███████╗██║     ██║   ██║██║   ██║
-██╔══██╗██║╚════██║██║     ██║   ██║██║   ██║
-██████╔╝██║███████║╚██████╗╚██████╔╝██║   ██║
-╚═════╝ ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝   ╚═╝
-
-Offline password hash auditing & recovery tool
-
-! Authorized use only !
-'''
+import biscuit.constants as CONST
 
 # ==============================
 #         Common outputs        
 # ==============================
 
 def help_output() -> str:
-    return '''usage: biscuit [-h] {dictionary,brute-force,spray,hash-gen} ...
+    return f'''usage: biscuit [-h] <MODE> ...
+
+Biscuit v{CONST.VERSION}
 
 Offline password hash auditing & recovery tool
 
 ! Authorized use only !
 
-modes:
+Modes:
 
-  attacks:
-    dictionary, dict  Test passwords from a wordlist against a target hash
-    brute-force, bf   Generate and test passwords across a defined keyspace
-    spray             Test a password against multiple target hashes
+  Attacks:
+    dictionary, dict  {CONST.DICTIONARY_DESCRIPTION}
+    brute-force, bf   {CONST.BRUTEFORCE_DESCRIPTION}
+    spray             {CONST.SPRAY_DESCRIPTION}
 
-  utilities:
-    hash-gen, hg      Generate a hash from a given password and algorithm
+  Utilities:
+    hash-gen, hg      {CONST.HASHGEN_DESCRIPTION}
 
-options:
-  -h, --help          Show this help message and exit
+Options:
+  -h, --help          {CONST.HELP_DESCRIPTION}
 
 Use 'biscuit <mode> --help' for more information about a specific mode.
 

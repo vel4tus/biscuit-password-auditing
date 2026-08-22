@@ -2,7 +2,8 @@
 
 import argparse
 import config
-from modes import dictionary, hashgen
+from modes import dictionary, bruteforce, hashgen
+import output as output_templates
 
 # CLI implementation using argparse
 parser = argparse.ArgumentParser(
@@ -29,8 +30,8 @@ bruteforce_parser = subparsers.add_parser(name="brute-force", description="Gener
 bruteforce_parser.add_argument("--hash", help="Target password hash", required=True)
 bruteforce_parser.add_argument("--algorithm", help="Algorithm used to hash candidates", choices=config.HASH_ALGORITHMS, required=True)
 bruteforce_parser.add_argument("--charset", help="Character set used to generate hash candidates")
-bruteforce_parser.add_argument("--min-length", help="Minimum password length of generated hash candidates")
-bruteforce_parser.add_argument("--max-length", help="Maximum password length of generated hash candidates")
+bruteforce_parser.add_argument("--min-length", help="Minimum password length of generated hash candidates", dest="min_length")
+bruteforce_parser.add_argument("--max-length", help="Maximum password length of generated hash candidates", dest="max_length")
 bruteforce_parser.add_argument("--output", help="Output file. If omitted, print results to the terminal", metavar="PATH")
 # Salt support - WIP
 # dictionary_parser.add_argument("--salt")
@@ -50,10 +51,10 @@ def main():
 
     match args.mode:
         case "dictionary":
-            dictionary.dictionary_attack(args.hash, args.algorithm, args.wordlist, args.output)
+            dictionary.main(args.hash, args.algorithm, args.wordlist, args.output)
         case "brute-force":
-            pass
+            bruteforce.main(args.hash, args.algorithm, args.charset, args.min_length, args.max_length, args.output)
         case "spray":
             pass
         case "hash-gen":
-            hashgen.hash_gen(args.password, args.algorithm)
+            hashgen.main(args.password, args.algorithm)

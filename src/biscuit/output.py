@@ -33,6 +33,22 @@ def dictionary_mode_progress(candidates_tested: int, total_candidates: int, time
 \033[2KTime remaining:     {time_remaining}'''
 
 
+def bruteforce_mode_parameters(target_hash: str, algorithm: str, charset: str, min_length: int, max_length: int, output: str):
+    return f'''MODE:       Brute-force Attack
+HASH:       {target_hash}
+ALGORITHM:  {algorithm}
+CHARSET:    {charset}
+LENGTH:     {f"{min_length}" if min_length == max_length else f"{min_length}-{max_length}"}
+OUTPUT:     {output}'''
+
+
+def bruteforce_mode_progress(combinations_tested: int, total_combinations: int, time_elapsed: str, speed: int, time_remaining: str) -> str:
+    return f'''\033[2KCombinations tested:  {combinations_tested} / {total_combinations}
+\033[2KTime elapsed:         {time_elapsed}
+\033[2KSpeed:                {speed} candidates/sec
+\033[2KTime remaining:       {time_remaining}'''
+
+
 def time_formatter(time: int | float | None) -> str:
     if time is None:
         return "None"

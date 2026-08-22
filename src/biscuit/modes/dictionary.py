@@ -27,7 +27,7 @@ def refresh_progress(candidates_tested: int, total_candidates: int, execution_st
 
 
 # Main dictionary attack function
-def dictionary_attack(target_hash: str, algorithm: str, wordlist: str, output: str) -> None:
+def main(target_hash: str, algorithm: str, wordlist: str, output: str) -> None:
     print(output_templates.header())
     print(output_templates.dictionary_mode_parameters(target_hash, algorithm, wordlist, output) + "\n")
 

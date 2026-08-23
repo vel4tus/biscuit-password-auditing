@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Biscuit"
-version = ["version"]
+dynamic = ["version"]
 authors = [
   { name="vel4tus", email="vel4tus@proton.me" },
 ]
@@ -23,3 +23,6 @@ biscuit = "biscuit.CLI:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.dynamic]
+version = {attr = "biscuit.constants.VERSION"}

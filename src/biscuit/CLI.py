@@ -5,6 +5,7 @@ import biscuit.config
 from biscuit.modes import dictionary, bruteforce, hashgen
 import biscuit.output as output_templates
 import biscuit.constants as CONST
+from biscuit.config import DEFAULT_WORDLIST
 
 # CLI implementation using argparse
 parser = argparse.ArgumentParser(
@@ -21,11 +22,12 @@ parser.add_argument("--help", "-h", action="store_true")
 subparsers = parser.add_subparsers(title="biscuit.modes", dest="mode", help=output_templates.help_output())
 
 # Dicitonary attack parser
-dictionary_parser = subparsers.add_parser(name="dictionary", aliases=["dict"], description=CONST.MODE_DICTIONARY_DESCRIPTION)
-dictionary_parser.add_argument("--hash", "-H", help=CONST.ARGS_HASH_DESCRIPTION, required=True)
-dictionary_parser.add_argument("--algorithm", "-a", help=CONST.ARGS_ALGORITHM_DESCRIPTION, choices=biscuit.config.HASH_ALGORITHMS, required=True)
-dictionary_parser.add_argument("--wordlist", "-w", help=CONST.ARGS_WORDLIST_DESCRIPTION, choices=biscuit.config.WORDLISTS, default="NCSC-100K")
-dictionary_parser.add_argument("--output", "-o", help=CONST.ARGS_OUTPUT_DESCRIPTION, metavar="PATH")
+dictionary_parser = subparsers.add_parser(name="dictionary", aliases=["dict"], help="test", description=CONST.MODE_DICTIONARY_DESCRIPTION, add_help=False)
+dictionary_parser.add_argument("--help", "-h", action="store_true", dest="dict_help")
+dictionary_parser.add_argument("--hash", "-H", help=CONST.ARGS_HASH_DESCRIPTION)
+dictionary_parser.add_argument("--algorithm", "-a", help=CONST.ARGS_ALGORITHM_DESCRIPTION, choices=biscuit.config.HASH_ALGORITHMS)
+dictionary_parser.add_argument("--wordlist", "-w", help=CONST.ARGS_WORDLIST_DESCRIPTION, choices=biscuit.config.WORDLISTS, default=DEFAULT_WORDLIST)
+dictionary_parser.add_argument("--output", "-o", help=CONST.ARGS_OUTPUT_DESCRIPTION)
 # Salt support - WIP
 # dictionary_parser.add_argument("--salt")
 # dictionary_parser.add_argument("--salt-position", choices=["prefix", "suffix"], default="suffix")
@@ -60,7 +62,10 @@ def main():
     else:
         match args.mode:
             case "dictionary" | "dict":
-                dictionary.main(args.hash, args.algorithm, args.wordlist, args.output)
+                if args.dict_help:
+                    print(output_templates.dict_help_output())
+                else:
+                    dictionary.main(args.hash, args.algorithm, args.wordlist, args.output)
 
             case "brute-force" | "bf":
                 bruteforce.main(args.hash, args.algorithm, args.charset, args.min_length, args.max_length, args.output)

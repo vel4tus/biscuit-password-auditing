@@ -2,6 +2,7 @@
 
 import time
 import biscuit.constants as CONST
+from biscuit.config import WORDLISTS, DEFAULT_WORDLIST, HASH_ALGORITHMS
 
 # ==============================
 #         Common outputs        
@@ -36,6 +37,39 @@ Examples:
   biscuit brute-force --hash <HASH> --algorithm sha256 --charset alphanumeric --min-length 6 --max-length 8
   biscuit spray ...
   biscuit hash-gen --password <PASSWORD> --algorithm sha256'''
+
+
+def dict_help_output() -> str:
+    return f'''usage: biscuit dictionary [-h] --hash <HASH> --algorithm
+                          {{{",".join(HASH_ALGORITHMS)}}}
+                          [--wordlist <NAME|PATH>]
+                          [--output <PATH>]
+
+Test passwords from a wordlist against a target hash.
+
+Built-in wordlists:
+{"\n".join(WORDLISTS.keys())}
+
+Default wordlist:
+{DEFAULT_WORDLIST}
+
+Required arguments:
+  -H, --hash <HASH>     {CONST.ARGS_HASH_DESCRIPTION}
+  -a, --algorithm {{{",".join(HASH_ALGORITHMS)}}}
+                        {CONST.ARGS_ALGORITHM_DESCRIPTION}
+
+Optional arguments:
+  -w, --wordlist <NAME|PATH>
+                        {CONST.ARGS_WORDLIST_DESCRIPTION}
+  -o, --output <PATH>   {CONST.ARGS_OUTPUT_DESCRIPTION}
+
+  -h, --help            {CONST.HELP_DESCRIPTION}
+
+Examples:
+  biscuit dictionary --hash <HASH> --algorithm sha256
+  biscuit dictionary --hash <HASH> --algorithm sha256 --wordlist XATO-100K
+  biscuit dictionary --hash <HASH> --algorithm sha256 --wordlist /path/to/wordlist.txt
+  biscuit dictionary --hash <HASH> --algorithm sha256 --output /path/to/results.txt'''
 
 
 def state(state: str) -> str:

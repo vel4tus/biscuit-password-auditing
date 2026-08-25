@@ -11,16 +11,18 @@ import biscuit.constants
 
 # Valdates given arguments, searches for the missing ones before executing the attack
 def validate_args(target_hash: str, algorithm: str) -> bool:
-    if not target_hash and not algorithm:
-        print("error: target hash and hashing algorithm are required")
-        return False
+    missing = []
+
     if not target_hash:
-        print("error: target hash is required")
-        return False
+        missing.append("--hash")
     if not algorithm:
-        print("error: hashing algorithm is required")
+        missing.append("--algorithm")
+
+    if missing:
+        print(f"error: the following arguments are required: {", ".join(missing)}")
         return False
-    return True
+    else:
+        return True
 
 
 # Progress refresh system. Refreshes every <biscuit.config.REFRESH_INTERVAL> seconds

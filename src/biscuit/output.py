@@ -2,7 +2,7 @@
 
 import time
 import biscuit.constants as CONST
-from biscuit.config import WORDLISTS, DEFAULT_WORDLIST, HASH_ALGORITHMS
+from biscuit.config import WORDLISTS, DEFAULT_WORDLIST, HASH_ALGORITHMS, CHARSET
 
 # ==============================
 #         Common outputs        
@@ -45,7 +45,7 @@ def dict_help() -> str:
                           [--wordlist <NAME|PATH>]
                           [--output <PATH>]
 
-Test passwords from a wordlist against a target hash.
+{CONST.MODE_DICTIONARY_DESCRIPTION}
 
 Built-in wordlists:
 {"\n".join(WORDLISTS.keys())}
@@ -70,6 +70,42 @@ Examples:
   biscuit dictionary --hash <HASH> --algorithm sha256 --wordlist XATO-100K
   biscuit dictionary --hash <HASH> --algorithm sha256 --wordlist /path/to/wordlist.txt
   biscuit dictionary --hash <HASH> --algorithm sha256 --output /path/to/results.txt'''
+
+
+def bf_help() -> str:
+    return f'''usage: biscuit bruteforce [-h] --hash <HASH> --algorithm
+                          {{{",".join(HASH_ALGORITHMS)}}} --charset 
+                          {{{",".join(CHARSET)}}}
+                          --min-length <MIN_LENGTH> --max-length <MAX_LENGTH>
+                          [--output <OUTPUT>]
+
+{CONST.MODE_BRUTEFORCE_DESCRIPTION}
+
+
+Required arguments:
+  -H, --hash <HASH>     {CONST.ARGS_HASH_DESCRIPTION}
+
+  -a, --algorithm {{{",".join(HASH_ALGORITHMS)}}}
+                        {CONST.ARGS_ALGORITHM_DESCRIPTION}
+
+  -c, --charset {{{",".join(CHARSET)}}}
+                        {CONST.ARGS_CHARSET_DESCRIPTION}
+
+  -m, --min-length <MIN_LENGTH>
+                        {CONST.ARGS_MIN_LENGTH_DESCRIPTION}
+
+  -M, --max-length <MAX_LENGTH>
+                        {CONST.ARGS_MAX_LENGTH_DESCRIPTION}
+
+Optional arguments:
+  -o, --output <PATH>   {CONST.ARGS_OUTPUT_DESCRIPTION}
+
+  -h, --help            {CONST.HELP_DESCRIPTION}
+
+examples:
+  biscuit bruteforce --hash <hash> --algorithm sha256 --charset alphanumeric
+  biscuit bruteforce --hash <hash> --algorithm sha256 --charset alphanumeric --min-length 4 --max-length 8
+  biscuit bruteforce --hash <hash> --algorithm sha256 --charset alphanumeric --min-length 6 --max-length 6'''
 
 
 def state(state: str) -> str:

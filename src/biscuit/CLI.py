@@ -22,35 +22,36 @@ parser.add_argument("--help", "-h", action="store_true")
 subparsers = parser.add_subparsers(title="biscuit.modes", dest="mode")
 
 # Dicitonary attack parser
-dictionary_parser = subparsers.add_parser(name="dictionary", aliases=["dict"], help="test", description=CONST.MODE_DICTIONARY_DESCRIPTION, add_help=False)
+dictionary_parser = subparsers.add_parser(name="dictionary", aliases=["dict"], add_help=False)
 dictionary_parser.add_argument("--help", "-h", action="store_true", dest="dict_help")
-dictionary_parser.add_argument("--hash", "-H", help=CONST.ARGS_HASH_DESCRIPTION)
-dictionary_parser.add_argument("--algorithm", "-a", help=CONST.ARGS_ALGORITHM_DESCRIPTION, choices=biscuit.config.HASH_ALGORITHMS)
-dictionary_parser.add_argument("--wordlist", "-w", help=CONST.ARGS_WORDLIST_DESCRIPTION, choices=biscuit.config.WORDLISTS, default=DEFAULT_WORDLIST)
-dictionary_parser.add_argument("--output", "-o", help=CONST.ARGS_OUTPUT_DESCRIPTION)
+dictionary_parser.add_argument("--hash", "-H")
+dictionary_parser.add_argument("--algorithm", "-a", choices=biscuit.config.HASH_ALGORITHMS)
+dictionary_parser.add_argument("--wordlist", "-w", choices=biscuit.config.WORDLISTS, default=DEFAULT_WORDLIST)
+dictionary_parser.add_argument("--output", "-o")
 # Salt support - WIP
 # dictionary_parser.add_argument("--salt")
 # dictionary_parser.add_argument("--salt-position", choices=["prefix", "suffix"], default="suffix")
 
 # Brute-force attack parser
-bruteforce_parser = subparsers.add_parser(name="brute-force", aliases=["bf"], description=CONST.MODE_BRUTEFORCE_DESCRIPTION)
-bruteforce_parser.add_argument("--hash", "-H", help=CONST.ARGS_HASH_DESCRIPTION, required=True)
-bruteforce_parser.add_argument("--algorithm", "-a", help=CONST.ARGS_ALGORITHM_DESCRIPTION, choices=biscuit.config.HASH_ALGORITHMS, required=True)
-bruteforce_parser.add_argument("--charset", "-c", required=True, choices=biscuit.config.CHARSET, help=CONST.ARGS_CHARSET_DESCRIPTION)
-bruteforce_parser.add_argument("--min-length", "-m", type=int, required=True, help=CONST.ARGS_MIN_LENGTH_DESCRIPTION, dest="min_length")
-bruteforce_parser.add_argument("--max-length", "-M", type=int, required=True, help=CONST.ARGS_MIN_LENGTH_DESCRIPTION, dest="max_length")
-bruteforce_parser.add_argument("--output", "-o", help=CONST.ARGS_OUTPUT_DESCRIPTION, metavar="PATH")
+bruteforce_parser = subparsers.add_parser(name="brute-force", aliases=["bf"], add_help=False)
+bruteforce_parser.add_argument("--help", "-h", action="store_true", dest="bf_help")
+bruteforce_parser.add_argument("--hash", "-H")
+bruteforce_parser.add_argument("--algorithm", "-a", choices=biscuit.config.HASH_ALGORITHMS)
+bruteforce_parser.add_argument("--charset", "-c", choices=biscuit.config.CHARSET)
+bruteforce_parser.add_argument("--min-length", "-m", type=int)
+bruteforce_parser.add_argument("--max-length", "-M", type=int)
+bruteforce_parser.add_argument("--output", "-o", metavar="PATH")
 # Salt support - WIP
 # dictionary_parser.add_argument("--salt")
 # dictionary_parser.add_argument("--salt-position", choices=["prefix", "suffix"], default="suffix")
 
 # Password spraying attack parser
-spray_parser = subparsers.add_parser(name="spray", description=CONST.MODE_SPRAY_DESCRIPTION, add_help=False)
+spray_parser = subparsers.add_parser(name="spray", add_help=False)
 
 # Hash generation parser
-hashgen_parser = subparsers.add_parser(name="hash-gen", aliases=["hg"], description=CONST.MODE_HASHGEN_DESCRIPTION)
-hashgen_parser.add_argument("--password", "-P", help=CONST.ARGS_PASSWORD_DESCRIPTION, required=True)
-hashgen_parser.add_argument("--algorithm", "-a", help=CONST.ARGS_ALGORITHM_DESCRIPTION, choices=biscuit.config.HASH_ALGORITHMS)
+hashgen_parser = subparsers.add_parser(name="hash-gen", aliases=["hg"])
+hashgen_parser.add_argument("--password", "-P")
+hashgen_parser.add_argument("--algorithm", "-a", choices=biscuit.config.HASH_ALGORITHMS)
 
 
 def main():
@@ -68,7 +69,10 @@ def main():
                     dictionary.main(args.hash, args.algorithm, args.wordlist, args.output)
 
             case "brute-force" | "bf":
-                bruteforce.main(args.hash, args.algorithm, args.charset, args.min_length, args.max_length, args.output)
+                if args.bf_help:
+                    print(output_templates.bf_help())
+                else:
+                    bruteforce.main(args.hash, args.algorithm, args.charset, args.min_length, args.max_length, args.output)
 
             case "spray":
                 pass

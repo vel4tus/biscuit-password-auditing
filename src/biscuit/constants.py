@@ -17,7 +17,7 @@ Offline password hash auditing & recovery tool
 '''
 
 MODE_DICTIONARY_DESCRIPTION = "Test passwords from a wordlist against a target hash"
-MODE_BRUTEFORCE_DESCRIPTION = "Generate and test passwords across a defined keyspace"
+MODE_BRUTEFORCE_DESCRIPTION = "Generate and test passwords candidates across a defined keyspace"
 MODE_SPRAY_DESCRIPTION = "Test a password against multiple target hashes"
 MODE_HASHGEN_DESCRIPTION = "Generate a hash from a given password and algorithm"
 

@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument("--help", "-h", action="store_true")
 
 # Subparser for multiple biscuit.modes
-subparsers = parser.add_subparsers(title="biscuit.modes", dest="mode", help=output_templates.help_output())
+subparsers = parser.add_subparsers(title="biscuit.modes", dest="mode")
 
 # Dicitonary attack parser
 dictionary_parser = subparsers.add_parser(name="dictionary", aliases=["dict"], help="test", description=CONST.MODE_DICTIONARY_DESCRIPTION, add_help=False)
@@ -57,13 +57,13 @@ def main():
     args = parser.parse_args()
 
     if args.help or not args.mode:
-        print(output_templates.help_output())
+        print(output_templates.help())
 
     else:
         match args.mode:
             case "dictionary" | "dict":
                 if args.dict_help:
-                    print(output_templates.dict_help_output())
+                    print(output_templates.dict_help())
                 else:
                     dictionary.main(args.hash, args.algorithm, args.wordlist, args.output)
 

@@ -9,7 +9,21 @@ import biscuit.calculations
 import biscuit.constants
 
 
-# Progress refresh system. Refreshes every <biscuit.config.REFRESH_INTERVAL> seconds.
+# Valdates given arguments, searches for the missing ones before executing the attack
+def validate_args(target_hash: str, algorithm: str) -> bool:
+    if not target_hash and not algorithm:
+        print("error: target hash and hashing algorithm are required")
+        return False
+    if not target_hash:
+        print("error: target hash is required")
+        return False
+    if not algorithm:
+        print("error: hashing algorithm is required")
+        return False
+    return True
+
+
+# Progress refresh system. Refreshes every <biscuit.config.REFRESH_INTERVAL> seconds
 def refresh_progress(candidates_tested: int, total_candidates: int, execution_stopwatch: float, last_refresh_time: float, previous_candidates_tested: int, stop: bool):
     time_elapsed = output_templates.time_formatter(time.perf_counter() - execution_stopwatch)
 
@@ -30,6 +44,9 @@ def refresh_progress(candidates_tested: int, total_candidates: int, execution_st
 
 # Main dictionary attack function
 def main(target_hash: str, algorithm: str, wordlist: str, output: str) -> None:
+    if not validate_args(target_hash, algorithm):
+        return
+
     print(biscuit.constants.HEADER)
     print(output_templates.dictionary_mode_parameters(target_hash, algorithm, wordlist, output) + "\n")
 

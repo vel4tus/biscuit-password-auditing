@@ -8,7 +8,7 @@ from biscuit.config import WORDLISTS, DEFAULT_WORDLIST, HASH_ALGORITHMS
 #         Common outputs        
 # ==============================
 
-def help_output() -> str:
+def help() -> str:
     return f'''usage: biscuit [-h] <MODE> ...
 
 Biscuit v{CONST.VERSION}
@@ -39,7 +39,7 @@ Examples:
   biscuit hash-gen --password <PASSWORD> --algorithm sha256'''
 
 
-def dict_help_output() -> str:
+def dict_help() -> str:
     return f'''usage: biscuit dictionary [-h] --hash <HASH> --algorithm
                           {{{",".join(HASH_ALGORITHMS)}}}
                           [--wordlist <NAME|PATH>]

@@ -52,9 +52,13 @@ def main(target_hash: str, algorithm: str, wordlist: str, output: str) -> None:
     print(biscuit.constants.HEADER)
     print(output_templates.dictionary_mode_parameters(target_hash, algorithm, wordlist, output) + "\n")
 
+    # Performance counters
+    execution_stopwatch = time.perf_counter()
+    last_refresh_time = time.perf_counter()
+
     # Wordlist path handler
     print(output_templates.state("Searching for the wordlist..."))
-
+    
     if wordlist in biscuit.config.WORDLISTS:
         wordlist_path = biscuit.config.WORDLISTS[wordlist]["PATH"]
         wordlist_length = biscuit.config.WORDLISTS[wordlist]["LENGTH"]
@@ -64,10 +68,6 @@ def main(target_hash: str, algorithm: str, wordlist: str, output: str) -> None:
     else:
         print("\033[1A\r" + output_templates.state("Wordlist was not found..."))
         return
-    
-    # Performance counters
-    execution_stopwatch = time.perf_counter()
-    last_refresh_time = time.perf_counter()
 
     # Wordlist file opening
 
@@ -105,6 +105,4 @@ def main(target_hash: str, algorithm: str, wordlist: str, output: str) -> None:
         last_refresh_time, previous_candidates_tested = refresh_progress(candidates_tested, total_candidates, execution_stopwatch, last_refresh_time, previous_candidates_tested, True)
         print(output_templates.state("Finished"))
         print(output_templates.result(False, None))
-        
-
         print()

@@ -9,7 +9,23 @@ import biscuit.calculations
 import biscuit.constants
 
 
-# Progress refresh system. Refreshes every <biscuit.config.REFRESH_INTERVAL> seconds.
+# Valdates given arguments, searches for the missing ones before executing the attack
+def validate_args(target_hash: str, algorithm: str) -> bool:
+    missing = []
+
+    if not target_hash:
+        missing.append("--hash")
+    if not algorithm:
+        missing.append("--algorithm")
+
+    if missing:
+        print(f"error: the following arguments are required: {", ".join(missing)}")
+        return False
+    else:
+        return True
+
+
+# Progress refresh system. Refreshes every <biscuit.config.REFRESH_INTERVAL> seconds
 def refresh_progress(candidates_tested: int, total_candidates: int, execution_stopwatch: float, last_refresh_time: float, previous_candidates_tested: int, stop: bool):
     time_elapsed = output_templates.time_formatter(time.perf_counter() - execution_stopwatch)
 
@@ -30,12 +46,19 @@ def refresh_progress(candidates_tested: int, total_candidates: int, execution_st
 
 # Main dictionary attack function
 def main(target_hash: str, algorithm: str, wordlist: str, output: str) -> None:
+    if not validate_args(target_hash, algorithm):
+        return
+
     print(biscuit.constants.HEADER)
     print(output_templates.dictionary_mode_parameters(target_hash, algorithm, wordlist, output) + "\n")
 
+    # Performance counters
+    execution_stopwatch = time.perf_counter()
+    last_refresh_time = time.perf_counter()
+
     # Wordlist path handler
     print(output_templates.state("Searching for the wordlist..."))
-
+    
     if wordlist in biscuit.config.WORDLISTS:
         wordlist_path = biscuit.config.WORDLISTS[wordlist]["PATH"]
         wordlist_length = biscuit.config.WORDLISTS[wordlist]["LENGTH"]
@@ -45,10 +68,6 @@ def main(target_hash: str, algorithm: str, wordlist: str, output: str) -> None:
     else:
         print("\033[1A\r" + output_templates.state("Wordlist was not found..."))
         return
-    
-    # Performance counters
-    execution_stopwatch = time.perf_counter()
-    last_refresh_time = time.perf_counter()
 
     # Wordlist file opening
 
@@ -86,6 +105,4 @@ def main(target_hash: str, algorithm: str, wordlist: str, output: str) -> None:
         last_refresh_time, previous_candidates_tested = refresh_progress(candidates_tested, total_candidates, execution_stopwatch, last_refresh_time, previous_candidates_tested, True)
         print(output_templates.state("Finished"))
         print(output_templates.result(False, None))
-        
-
         print()

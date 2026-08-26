@@ -66,6 +66,11 @@ WORDLISTS = {
 }
 
 
+# Default wordlist
+# Currently cannot be changed
+DEFAULT_WORDLIST = "NCSC-100K"
+
+
 # Output refresh interval (in sec)
 # Lower values may reduce execution performance.
 # Common values: 0.1, 0.5, 1.0

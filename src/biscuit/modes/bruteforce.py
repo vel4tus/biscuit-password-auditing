@@ -10,7 +10,7 @@ import biscuit.calculations
 from biscuit.config import CHARSET
 
 
-# Valdates given arguments, searches for the missing ones before executing the attack
+# Valdate given arguments, searche for the missing ones before executing the attack
 def validate_args(target_hash: str, algorithm: str, charset: str, min_length: int, max_length) -> bool:
     missing = []
 
@@ -32,7 +32,7 @@ def validate_args(target_hash: str, algorithm: str, charset: str, min_length: in
         return True
 
 
-# Progress refresh system. Refreshes every <biscuit.config.REFRESH_INTERVAL> seconds
+# Progress refresh system. Refresh every <biscuit.config.REFRESH_INTERVAL> seconds
 def refresh_progress(combinations_tested: int, total_combinations: int, execution_stopwatch: float, last_refresh_time: float, previous_combinations_tested: int, stop: bool):
     time_elapsed = output_templates.time_formatter(time.perf_counter() - execution_stopwatch)
 
@@ -53,9 +53,11 @@ def refresh_progress(combinations_tested: int, total_combinations: int, executio
 
 # Main brute-force attack function
 def main(target_hash: str, algorithm: str, charset: str, min_length: int, max_length: int, output: str):
+    # Validate given arguments
     if not validate_args(target_hash, algorithm, charset, min_length, max_length):
         return
 
+    # Print app's header and mode's initial parameters
     print(CONST.HEADER)
     print(output_templates.bruteforce_mode_parameters(target_hash, algorithm, charset, min_length, max_length, output) + "\n")
     
@@ -64,8 +66,10 @@ def main(target_hash: str, algorithm: str, charset: str, min_length: int, max_le
     execution_stopwatch = time.perf_counter()
     last_refresh_time = time.perf_counter()
 
+    # Convert target hexadecimal hash into binary code
     target_digest = bytes.fromhex(target_hash)
 
+    # Initialize essential variables
     combinations_tested = 0
     total_combinations = 0
     time_elapsed = "None"
@@ -73,15 +77,17 @@ def main(target_hash: str, algorithm: str, charset: str, min_length: int, max_le
     time_remaining = "None"
     previous_combinations_tested = 0
 
-    # Total combinations
+    # Calculate the quantity of all combinations
     print(output_templates.state("Computing the total amount of combinations..."))
 
     for length in range(min_length, max_length+1):
         total_combinations += len(CHARSET[charset])**length
 
+    # Print mode's initial progress and current state
     print("\033[1A\r" + output_templates.bruteforce_mode_progress(combinations_tested, total_combinations, time_elapsed, speed, time_remaining) + "\n")
     print(output_templates.state("In progress..."))
 
+    # Execute the attack. For each length the iteration is performed separately. If min_length and max_length are equal, perform the iteration once.
     for length in range(min_length, max_length+1):
         for candidate in itertools.product(CHARSET[charset], repeat=length):
             candidate = "".join(candidate)
@@ -94,7 +100,7 @@ def main(target_hash: str, algorithm: str, charset: str, min_length: int, max_le
                 print(output_templates.result(True, candidate))
                 return
 
-            # Progress refresh. Checks whether <biscuit.config.REFRESH_INTERVAL> seconds passed to refresh the progress.
+            # Progress refresh. Check whether <biscuit.config.REFRESH_INTERVAL> seconds passed to refresh the progress.
             if time.perf_counter() - last_refresh_time >= biscuit.config.REFRESH_INTERVAL:
                 last_refresh_time, previous_combinations_tested = refresh_progress(combinations_tested, total_combinations, execution_stopwatch, last_refresh_time, previous_combinations_tested, False)
                 print(output_templates.state("In progress..."))

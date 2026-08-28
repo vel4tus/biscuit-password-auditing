@@ -3,9 +3,8 @@
 import argparse
 import biscuit.config
 from biscuit.modes import dictionary, bruteforce, hashgen
-import biscuit.output as output_templates
-import biscuit.constants as CONST
 from biscuit.config import DEFAULT_WORDLIST
+import biscuit.help as help
 
 # CLI implementation using argparse
 parser = argparse.ArgumentParser(
@@ -49,7 +48,8 @@ bruteforce_parser.add_argument("--output", "-o", metavar="PATH")
 spray_parser = subparsers.add_parser(name="spray", add_help=False)
 
 # Hash generation parser
-hashgen_parser = subparsers.add_parser(name="hash-gen", aliases=["hg"])
+hashgen_parser = subparsers.add_parser(name="hash-gen", aliases=["hg"], add_help=False)
+hashgen_parser.add_argument("--help", "-h", action="store_true", dest="hg_help")
 hashgen_parser.add_argument("--password", "-P")
 hashgen_parser.add_argument("--algorithm", "-a", choices=biscuit.config.HASH_ALGORITHMS)
 
@@ -58,19 +58,19 @@ def main():
     args = parser.parse_args()
 
     if args.help or not args.mode:
-        print(output_templates.help())
+        print(help.help())
 
     else:
         match args.mode:
             case "dictionary" | "dict":
                 if args.dict_help:
-                    print(output_templates.dict_help())
+                    print(help.dict_help())
                 else:
                     dictionary.main(args.hash, args.algorithm, args.wordlist, args.output)
 
             case "brute-force" | "bf":
                 if args.bf_help:
-                    print(output_templates.bf_help())
+                    print(help.bf_help())
                 else:
                     bruteforce.main(args.hash, args.algorithm, args.charset, args.min_length, args.max_length, args.output)
 
@@ -78,4 +78,7 @@ def main():
                 pass
 
             case "hash-gen" | "hg":
-                hashgen.main(args.password, args.algorithm)
+                if args.hg_help:
+                    print(help.hg_help())
+                else:
+                    hashgen.main(args.password, args.algorithm)

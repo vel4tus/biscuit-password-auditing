@@ -50,11 +50,12 @@ LENGTH:     {f"{min_length}" if min_length == max_length else f"{min_length}-{ma
 OUTPUT:     {output}'''
 
 
-def bruteforce_mode_progress(combinations_tested: int, total_combinations: int, time_elapsed: str, speed: int, time_remaining: str) -> str:
+def bruteforce_mode_progress(combinations_tested: int, total_combinations: int, time_elapsed: str, speed: int, time_remaining: str, length: int) -> str:
     return f'''\033[2KCombinations tested:  {combinations_tested} / {total_combinations}
 \033[2KTime elapsed:         {time_elapsed}
 \033[2KSpeed:                {speed} combinations/sec
-\033[2KTime remaining:       {time_remaining}'''
+\033[2KTime remaining:       {time_remaining}
+\033[2KCurrent length: {length}'''
 
 # ==============================
 #         Time formatter        

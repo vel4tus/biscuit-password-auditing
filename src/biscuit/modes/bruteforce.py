@@ -57,6 +57,13 @@ def main(target_hash: str, algorithm: str, charset: str, min_length: int, max_le
     if not validate_args(target_hash, algorithm, charset, min_length, max_length):
         return
 
+    # Convert target hexadecimal hash into binary code
+    try:
+        target_digest = bytes.fromhex(target_hash)
+    except ValueError:
+        print("error: hash must contain an even number of hexadecimal digits")
+        return
+
     # Print app's header and mode's initial parameters
     print(CONST.HEADER)
     print(output_templates.bruteforce_mode_parameters(target_hash, algorithm, charset, min_length, max_length, output) + "\n")

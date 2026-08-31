@@ -25,7 +25,7 @@ dictionary_parser = subparsers.add_parser(name="dictionary", aliases=["dict"], a
 dictionary_parser.add_argument("--help", "-h", action="store_true", dest="dict_help")
 dictionary_parser.add_argument("--hash", "-H")
 dictionary_parser.add_argument("--algorithm", "-a", choices=biscuit.config.HASH_ALGORITHMS)
-dictionary_parser.add_argument("--wordlist", "-w", choices=biscuit.config.WORDLISTS, default=DEFAULT_WORDLIST)
+dictionary_parser.add_argument("--wordlist", "-w", default=DEFAULT_WORDLIST)
 dictionary_parser.add_argument("--output", "-o")
 # Salt support - WIP
 # dictionary_parser.add_argument("--salt")

@@ -46,19 +46,18 @@ def refresh_progress(candidates_tested: int, total_candidates: int, execution_st
 
 # Main dictionary attack function
 def main(target_hash: str, algorithm: str, wordlist: str, output: str) -> None:
+    # Validate given arguments
     if not validate_args(target_hash, algorithm):
         return
 
-    print(biscuit.constants.HEADER)
-    print(output_templates.dictionary_mode_parameters(target_hash, algorithm, wordlist, output) + "\n")
-
-    # Performance counters
-    execution_stopwatch = time.perf_counter()
-    last_refresh_time = time.perf_counter()
+    # Convert target hexadecimal hash into binary code
+    try:
+        target_digest = bytes.fromhex(target_hash)
+    except ValueError:
+        print("error: hash must contain an even number of hexadecimal digits")
+        return
 
     # Wordlist path handler
-    print(output_templates.state("Searching for the wordlist..."))
-    
     if wordlist in biscuit.config.WORDLISTS:
         wordlist_path = biscuit.config.WORDLISTS[wordlist]["PATH"]
         wordlist_length = biscuit.config.WORDLISTS[wordlist]["LENGTH"]
@@ -66,24 +65,30 @@ def main(target_hash: str, algorithm: str, wordlist: str, output: str) -> None:
         wordlist_path = Path(wordlist)
         wordlist_length = len(wordlist_path.read_text().splitlines())
     else:
-        print("\033[1A\r" + output_templates.state("Wordlist was not found..."))
+        print("error: wordlist was not found")
         return
 
+    # Print app's header and mode's initial parameters
+    print(biscuit.constants.HEADER)
+    print(output_templates.dictionary_mode_parameters(target_hash, algorithm, wordlist, output) + "\n")
+
+    # Performance counters
+    execution_stopwatch = time.perf_counter()
+    last_refresh_time = time.perf_counter()
+
+    # Initialize essential variables
+    candidates_tested = 0
+    total_candidates = wordlist_length
+    time_elapsed = "None"
+    speed = 0
+    time_remaining = "None"
+    previous_candidates_tested = 0
+    
+    print("\033[1A\r" + output_templates.dictionary_mode_progress(candidates_tested, total_candidates, time_elapsed, speed, time_remaining) + "\n")
+    print(output_templates.state("In progress..."))
+
     # Wordlist file opening
-
     with wordlist_path.open(mode="r", encoding="UTF-8") as file:
-        target_digest = bytes.fromhex(target_hash)
-
-        candidates_tested = 0
-        total_candidates = wordlist_length
-        time_elapsed = "None"
-        speed = 0
-        time_remaining = "None"
-        previous_candidates_tested = 0
-
-        print("\033[1A\r" + output_templates.dictionary_mode_progress(candidates_tested, total_candidates, time_elapsed, speed, time_remaining) + "\n")
-        print(output_templates.state("In progress..."))
-
         # Password -> Hash -> Compare loop
         for candidate in file:
             candidate = candidate.strip("\r\n")

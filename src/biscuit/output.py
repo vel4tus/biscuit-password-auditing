@@ -1,8 +1,5 @@
 # output.py
 
-import biscuit.constants as CONST
-from biscuit.config import WORDLISTS, DEFAULT_WORDLIST, HASH_ALGORITHMS, CHARSET
-
 # ==============================
 #         Common outputs        
 # ==============================

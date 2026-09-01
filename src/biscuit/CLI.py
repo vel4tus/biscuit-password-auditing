@@ -5,6 +5,7 @@ import biscuit.config
 from biscuit.modes import dictionary, bruteforce, hashgen
 from biscuit.config import DEFAULT_WORDLIST
 import biscuit.help as help
+import biscuit.benchmark
 
 # CLI implementation using argparse
 parser = argparse.ArgumentParser(
@@ -40,6 +41,7 @@ bruteforce_parser.add_argument("--charset", "-c", choices=biscuit.config.CHARSET
 bruteforce_parser.add_argument("--min-length", "-m", type=int)
 bruteforce_parser.add_argument("--max-length", "-M", type=int)
 bruteforce_parser.add_argument("--output", "-o", metavar="PATH")
+bruteforce_parser.add_argument("--benchmark", action="store_true", dest="bruteforce_benchmark")
 # Salt support - WIP
 # dictionary_parser.add_argument("--salt")
 # dictionary_parser.add_argument("--salt-position", choices=["prefix", "suffix"], default="suffix")
@@ -66,13 +68,24 @@ def main():
                 if args.dict_help:
                     print(help.dict_help())
                 else:
-                    dictionary.main(args.hash, args.algorithm, args.wordlist, args.output)
+                    dictionary.main(
+                        args.hash, 
+                        args.algorithm, 
+                        args.wordlist, 
+                        args.output
+                    )
 
             case "brute-force" | "bf":
-                if args.bf_help:
-                    print(help.bf_help())
-                else:
-                    bruteforce.main(args.hash, args.algorithm, args.charset, args.min_length, args.max_length, args.output)
+                bruteforce.main(
+                    args.hash, 
+                    args.algorithm, 
+                    args.charset, 
+                    args.min_length, 
+                    args.max_length, 
+                    args.output, 
+                    args.bf_help, 
+                    args.bruteforce_benchmark
+                )
 
             case "spray":
                 pass

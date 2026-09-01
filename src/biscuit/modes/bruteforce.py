@@ -7,11 +7,16 @@ import biscuit.output as output_templates
 import biscuit.config
 import biscuit.constants as CONST
 import biscuit.calculations
+import biscuit.help
 from biscuit.config import CHARSET
+from biscuit.benchmark import bruteforce_benchmark
 
 
 # Valdate given arguments, searche for the missing ones before executing the attack
-def validate_args(target_hash: str, algorithm: str, charset: str, min_length: int, max_length) -> bool:
+def validate_attack_args(target_hash: str, algorithm: str, charset: str, min_length: int, max_length) -> bool:
+    # Required: target_hash, algorithm, charset, min_length, max_length
+    # Not allowed: target_hash, output
+
     missing = []
 
     if not target_hash:
@@ -25,8 +30,42 @@ def validate_args(target_hash: str, algorithm: str, charset: str, min_length: in
     if not max_length:
         missing.append("--max-length")
 
+    # Print error if not validated and stop execution, else proceed
     if missing:
         print(f"error: the following arguments are required: {", ".join(missing)}")
+        return False
+    else:
+        return True
+
+
+def validate_benchmark_args(target_hash: str, algorithm: str, charset: str, min_length: int, max_length: int, output: str) -> bool:
+    # Required: algorithm, charset, min_length, max_length
+    # Not allowed: target_hash, output
+
+    missing_args = []
+    not_allowed_args = []
+
+    if not algorithm:
+        missing_args.append("algorithm")
+    if not charset:
+        missing_args.append("charset")
+    if not min_length:
+        missing_args.append("min_length")
+    if not max_length:
+        missing_args.append("max_length")
+    if target_hash:
+        not_allowed_args.append("target_hash")
+    if output:
+        not_allowed_args.append("output")
+
+    # Print error if not validated
+    if missing_args:
+        print(f"error: the following arguments are required: {", ".join(missing_args)}")
+    if not_allowed_args:
+        print(f"error: the following arguments are not allowed: {", ".join(not_allowed_args)}")
+
+    # Stop execution if not validated, else proceed
+    if missing_args or not_allowed_args:
         return False
     else:
         return True
@@ -50,12 +89,12 @@ def refresh_progress(combinations_tested: int, total_combinations: int, executio
     
     return time.perf_counter(), combinations_tested
 
+# WIP
+def bruteforce_engine():
+    pass
 
-# Main brute-force attack function
-def main(target_hash: str, algorithm: str, charset: str, min_length: int, max_length: int, output: str):
-    # Validate given arguments
-    if not validate_args(target_hash, algorithm, charset, min_length, max_length):
-        return
+
+def bruteforce_attack(target_hash: str, algorithm: str, charset: str, min_length: int, max_length: int, output: str):
 
     # Convert target hexadecimal hash into binary code
     try:
@@ -63,18 +102,6 @@ def main(target_hash: str, algorithm: str, charset: str, min_length: int, max_le
     except ValueError:
         print("error: hash must contain an even number of hexadecimal digits")
         return
-
-    # Print app's header and mode's initial parameters
-    print(CONST.HEADER)
-    print(output_templates.bruteforce_mode_parameters(target_hash, algorithm, charset, min_length, max_length, output) + "\n")
-    
-
-    # Performance counters
-    execution_stopwatch = time.perf_counter()
-    last_refresh_time = time.perf_counter()
-
-    # Convert target hexadecimal hash into binary code
-    target_digest = bytes.fromhex(target_hash)
 
     # Initialize essential variables
     combinations_tested = 0
@@ -85,13 +112,19 @@ def main(target_hash: str, algorithm: str, charset: str, min_length: int, max_le
     previous_combinations_tested = 0
 
     # Calculate the quantity of all combinations
-    print(output_templates.state("Computing the total amount of combinations..."))
-
     for length in range(min_length, max_length+1):
         total_combinations += len(CHARSET[charset])**length
 
+    # Performance counters
+    execution_stopwatch = time.perf_counter()
+    last_refresh_time = time.perf_counter()
+    
+    # Print app's header and mode's initial parameters
+    print(CONST.HEADER)
+    print(output_templates.bruteforce_mode_parameters(target_hash, algorithm, charset, min_length, max_length, output) + "\n")
+
     # Print mode's initial progress and current state
-    print("\033[1A\r" + output_templates.bruteforce_mode_progress(combinations_tested, total_combinations, time_elapsed, speed, time_remaining, 0) + "\n")
+    print(output_templates.bruteforce_mode_progress(combinations_tested, total_combinations, time_elapsed, speed, time_remaining, 0) + "\n")
     print(output_templates.state("In progress..."))
 
     # Execute the attack. For each length the iteration is performed separately. If min_length and max_length are equal, perform the iteration once.
@@ -101,7 +134,7 @@ def main(target_hash: str, algorithm: str, charset: str, min_length: int, max_le
             combinations_tested += 1
 
             # Success, end of execution
-            if target_digest == compute_hash("".join(candidate), algorithm):
+            if target_digest == compute_hash(candidate, algorithm):
                 last_refresh_time, previous_combinations_tested = refresh_progress(combinations_tested, total_combinations, execution_stopwatch, last_refresh_time, previous_combinations_tested, length, True)
                 print(output_templates.state("Finished"))
                 print(output_templates.result(True, candidate))
@@ -117,3 +150,28 @@ def main(target_hash: str, algorithm: str, charset: str, min_length: int, max_le
     print(output_templates.state("Finished"))
     print(output_templates.result(False, None))
     print()
+
+
+# Dispatcher
+def main(target_hash: str, algorithm: str, charset: str, min_length: int, max_length: int, output: str, show_help: bool, benchmark: bool) -> None:
+
+    # Help
+    if show_help:
+        print(biscuit.help.bf_help())
+        return
+
+    # Benchmark
+    if benchmark:
+        if validate_benchmark_args(target_hash, algorithm, charset, min_length, max_length, output):
+            bruteforce_benchmark(algorithm, charset, min_length, max_length)
+            return
+        else:
+            return
+
+    # Attack
+    if not benchmark:
+        if validate_attack_args(target_hash, algorithm, charset, min_length, max_length):
+            bruteforce_attack(target_hash, algorithm, charset, min_length, max_length, output)
+            return
+        else:
+            return

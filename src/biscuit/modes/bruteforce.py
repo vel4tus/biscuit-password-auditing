@@ -72,24 +72,24 @@ def validate_benchmark_args(target_hash: str, algorithm: str, charset: str, min_
         return True
 
 
-# Requires refactoring. Reference - benchmark:bruteforce_benchmark
 # Progress refresh system. Refresh every <biscuit.config.REFRESH_INTERVAL> seconds
 def refresh_progress(combinations_tested: int, total_combinations: int, execution_stopwatch: float, last_refresh_time: float, previous_combinations_tested: int, length: int, stop: bool):
-    time_elapsed = output_templates.time_formatter(time.perf_counter() - execution_stopwatch)
+    current_time = time.perf_counter()
+    time_elapsed = output_templates.time_formatter(current_time - execution_stopwatch)
 
     if stop:
         speed = 0
     else:
-        speed = biscuit.calculations.speed_calc(combinations_tested, previous_combinations_tested, last_refresh_time, time.perf_counter())
+        speed = biscuit.calculations.speed_calc(combinations_tested, previous_combinations_tested, last_refresh_time, current_time)
 
     if stop:
         time_remaining = output_templates.time_formatter(0)
     else:
         time_remaining = output_templates.time_formatter(biscuit.calculations.time_remaining_calc(combinations_tested, total_combinations, speed))
     
-    print("\033[7A\r" + output_templates.bruteforce_mode_progress(combinations_tested, total_combinations, time_elapsed, speed, time_remaining, length) + "\n")
+    print("\033[7A\033[J\r" + output_templates.bruteforce_mode_progress(combinations_tested, total_combinations, time_elapsed, speed, time_remaining, length) + "\n")
     
-    return time.perf_counter(), combinations_tested
+    return current_time, combinations_tested
 
 
 def bruteforce_attack(target_hash: str, algorithm: str, charset: str, min_length: int, max_length: int, output: str):

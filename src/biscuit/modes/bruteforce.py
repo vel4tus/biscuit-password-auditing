@@ -89,9 +89,13 @@ def refresh_progress(combinations_tested: int, total_combinations: int, executio
     
     return time.perf_counter(), combinations_tested
 
-# WIP
-def bruteforce_engine():
-    pass
+
+def bruteforce_engine(algorithm: str, charset: str, min_length: int, max_length: int):
+    for length in range(min_length, max_length+1):
+        for candidate in itertools.product(CHARSET[charset], repeat=length):
+            candidate = "".join(candidate)
+            candidate_digest = compute_hash(candidate, algorithm)
+            yield candidate, candidate_digest, length
 
 
 def bruteforce_attack(target_hash: str, algorithm: str, charset: str, min_length: int, max_length: int, output: str):
@@ -128,22 +132,21 @@ def bruteforce_attack(target_hash: str, algorithm: str, charset: str, min_length
     print(output_templates.state("In progress..."))
 
     # Execute the attack. For each length the iteration is performed separately. If min_length and max_length are equal, perform the iteration once.
-    for length in range(min_length, max_length+1):
-        for candidate in itertools.product(CHARSET[charset], repeat=length):
-            candidate = "".join(candidate)
-            combinations_tested += 1
+    for candidate, candidate_digest, length in bruteforce_engine(algorithm, charset, min_length, max_length):
 
-            # Success, end of execution
-            if target_digest == compute_hash(candidate, algorithm):
-                last_refresh_time, previous_combinations_tested = refresh_progress(combinations_tested, total_combinations, execution_stopwatch, last_refresh_time, previous_combinations_tested, length, True)
-                print(output_templates.state("Finished"))
-                print(output_templates.result(True, candidate))
-                return
+        combinations_tested += 1
+    
+        # Success, end of execution
+        if target_digest == candidate_digest:
+            last_refresh_time, previous_combinations_tested = refresh_progress(combinations_tested, total_combinations, execution_stopwatch, last_refresh_time, previous_combinations_tested, length, True)
+            print(output_templates.state("Finished"))
+            print(output_templates.result(True, candidate))
+            return
 
-            # Progress refresh. Check whether <biscuit.config.REFRESH_INTERVAL> seconds passed to refresh the progress.
-            if time.perf_counter() - last_refresh_time >= biscuit.config.REFRESH_INTERVAL:
-                last_refresh_time, previous_combinations_tested = refresh_progress(combinations_tested, total_combinations, execution_stopwatch, last_refresh_time, previous_combinations_tested, length, False)
-                print(output_templates.state(f"In progress..."))
+        # Progress refresh. Check whether <biscuit.config.REFRESH_INTERVAL> seconds passed to refresh the progress.
+        if time.perf_counter() - last_refresh_time >= biscuit.config.REFRESH_INTERVAL:
+            last_refresh_time, previous_combinations_tested = refresh_progress(combinations_tested, total_combinations, execution_stopwatch, last_refresh_time, previous_combinations_tested, length, False)
+            print(output_templates.state(f"In progress..."))
 
     # Unsuccess, end of execution
     last_refresh_time, previous_candidates_tested = refresh_progress(combinations_tested, total_combinations, execution_stopwatch, last_refresh_time, previous_combinations_tested, max_length, True)

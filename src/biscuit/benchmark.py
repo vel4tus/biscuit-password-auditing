@@ -1,3 +1,5 @@
+# benchmark.py
+
 import time
 import biscuit.output as output_templates
 from biscuit.engines.bruteforce_engine import bruteforce_engine

@@ -66,9 +66,9 @@ def bruteforce_benchmark(algorithm: str, charset: str, min_length: int, max_leng
     print(output_templates.state("In progress..."))
 
     # Execute the attack. For each length the iteration is performed separately. If min_length and max_length are equal, perform the iteration once.
-    for _, _, length in bruteforce_engine(algorithm, charset, min_length, max_length):
+    for _, combinations_tested_chunk, length in bruteforce_engine(None, algorithm, charset, min_length, max_length):
 
-        combinations_tested += 1
+        combinations_tested += combinations_tested_chunk
 
         # Progress refresh. Check whether <biscuit.config.REFRESH_INTERVAL> seconds passed to refresh the progress.
         if time.perf_counter() - last_refresh_time >= biscuit.config.REFRESH_INTERVAL:

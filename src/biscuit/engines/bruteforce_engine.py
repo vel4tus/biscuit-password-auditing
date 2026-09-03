@@ -7,17 +7,21 @@ from biscuit.config import CHARSET
 import biscuit.config
 
 
-def worker(chunk: list, algorithm: str):
-    results = []
+def worker(target_digest: bytes | None, chunk: list, algorithm: str) -> tuple[str | None, int]:
+    combinations_tested = 0
 
     for candidate in chunk:
+        combinations_tested += 1
+
         candidate_digest = compute_hash(candidate, algorithm)
-        results.append((candidate, candidate_digest))
 
-    return results
+        if target_digest == candidate_digest:
+            return candidate, combinations_tested
+
+    return None, combinations_tested
 
 
-def bruteforce_engine(algorithm: str, charset: str, min_length: int, max_length: int):
+def bruteforce_engine(target_digest: bytes | None, algorithm: str, charset: str, min_length: int, max_length: int):
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
         chunk = []
@@ -30,20 +34,21 @@ def bruteforce_engine(algorithm: str, charset: str, min_length: int, max_length:
                 chunk.append(candidate)
 
                 if len(chunk) >= biscuit.config.CHUNK_SIZE:
-                    futures.append(executor.submit(worker, chunk, algorithm))
+                    futures.append(executor.submit(worker, target_digest, chunk, algorithm))
                     chunk = []
 
                     if len(futures) >= biscuit.config.CHUNK_MAX:
                         for future in concurrent.futures.as_completed(futures):
-                            for candidate, candidate_digest in future.result():
-                                yield candidate, candidate_digest, length
+                            yield future.result()[0], future.result()[1], length
 
                         futures = []
 
             if chunk:
-                futures.append(executor.submit(worker, chunk, algorithm))
+                futures.append(executor.submit(worker, target_digest, chunk, algorithm))
                 chunk = []
 
-            for future in concurrent.futures.as_completed(futures):
-                for candidate, candidate_digest in future.result():
-                    yield candidate, candidate_digest, max_length
+            if len(futures) >= biscuit.config.CHUNK_MAX:
+                for future in concurrent.futures.as_completed(futures):
+                    yield future.result()[0], future.result()[1], length
+
+                futures = []

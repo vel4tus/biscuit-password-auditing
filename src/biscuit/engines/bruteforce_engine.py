@@ -4,6 +4,7 @@ import itertools
 import concurrent.futures
 from biscuit.hashing import compute_hash
 from biscuit.config import CHARSET
+import biscuit.config
 
 
 def worker(chunk: list, algorithm: str):
@@ -28,20 +29,21 @@ def bruteforce_engine(algorithm: str, charset: str, min_length: int, max_length:
                 candidate = "".join(candidate)
                 chunk.append(candidate)
 
-                if len(chunk) >= 10000:
+                if len(chunk) >= biscuit.config.CHUNK_SIZE:
                     futures.append(executor.submit(worker, chunk, algorithm))
                     chunk = []
 
-                    if len(futures) >= 4:
+                    if len(futures) >= biscuit.config.CHUNK_MAX:
                         for future in concurrent.futures.as_completed(futures):
                             for candidate, candidate_digest in future.result():
                                 yield candidate, candidate_digest, length
 
                         futures = []
 
-        if chunk:
-            futures.append(executor.submit(worker, chunk, algorithm))
+            if chunk:
+                futures.append(executor.submit(worker, chunk, algorithm))
+                chunk = []
 
-        for future in concurrent.futures.as_completed(futures):
-            for candidate, candidate_digest in future.result():
-                yield candidate, candidate_digest, max_length
+            for future in concurrent.futures.as_completed(futures):
+                for candidate, candidate_digest in future.result():
+                    yield candidate, candidate_digest, max_length

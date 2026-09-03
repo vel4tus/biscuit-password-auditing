@@ -42,7 +42,7 @@ biscuit brute-force --hash 660f2dd5a2e102002a444e862b511ac51a4dc6636a46edba79d62
 
 ### Hash Generation
 
-Generates a hash from a supplied password using a supported hashing algorithm.
+Generate a hash from a given password and algorithm.
 
 Syntax example:
 ```

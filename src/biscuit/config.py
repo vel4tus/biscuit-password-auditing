@@ -75,3 +75,13 @@ DEFAULT_WORDLIST = "NCSC-100K"
 # Lower values may reduce execution performance.
 # Common values: 0.1, 0.5, 1.0
 REFRESH_INTERVAL = 0.1
+
+
+# Chunk size
+# The amount of candidates being stored in one chunk during brute-force attack execution.
+CHUNK_SIZE = 15000
+
+
+# Maximum chunks
+# The largest amount of chunks being stored before collecting the processed candidates.
+CHUNK_MAX = 8

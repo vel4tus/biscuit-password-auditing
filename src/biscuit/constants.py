@@ -18,7 +18,6 @@ Offline password hash auditing & recovery tool
 
 MODE_DICTIONARY_DESCRIPTION = "Test passwords from a wordlist against a target hash"
 MODE_BRUTEFORCE_DESCRIPTION = "Generate and test password candidates across a defined keyspace"
-MODE_SPRAY_DESCRIPTION = "Test a password against multiple target hashes"
 MODE_HASHGEN_DESCRIPTION = "Generate a hash from a given password and algorithm"
 
 HELP_DESCRIPTION = "Show this help message and exit"
@@ -31,3 +30,4 @@ ARGS_CHARSET_DESCRIPTION = "Character set used to generate hash candidates"
 ARGS_MIN_LENGTH_DESCRIPTION = "Minimum password length of generated hash candidates"
 ARGS_MAX_LENGTH_DESCRIPTION = "Maximum password length of generated hash candidates"
 ARGS_PASSWORD_DESCRIPTION = "Password to hash"
+ARGS_BENCHMARK_DESCRIPTION = "Run a benchmark. Cannot be used with --hash or --output"

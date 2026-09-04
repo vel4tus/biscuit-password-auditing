@@ -8,50 +8,23 @@
 
 Biscuit is currently **WIP**.
 
-| Feature            | Status          |
-| ------------------ | --------------- |
-| Dictionary attack  | WIP — developed |
-| Brute-force attack | WIP — developed |
-| Hash generation    | WIP — developed |
-| Password spraying  | Not started     |
-| Salt support       | Planned         |
+| Feature             | Status      |
+| ------------------- | ----------- |
+| Hash generation     | Implemented |
+| Dictionary attack   | Implemented |
+| Brute-force attack  | Implemented |
+| Mask attack         | Planned     |
+| Hybrid attack       | Planned     |
+|                     |             |
+| Parallelism         | WIP         |
+| Mutations           | Planned     |
+| Salt support        | Planned     |
+|                     |             |
+| Linux support       | Implemented |
+| Windows support     | Planned     |
+| macOS support       | Planned     |
 
-*Currently supporting only Linux.*
-
-## Modes
-
-### Dictionary Attack
-
-Test passwords from a wordlist against a target hash.
-
-Syntax example:
-```
-biscuit dictionary --hash 660f2dd5a2e102002a444e862b511ac51a4dc6636a46edba79d62037c738b9f2 --algorithm sha256
-```
-
-Supports built-in wordlists and external wordlist files.
-
-### Brute-force Attack
-
-Generate and test password candidates across a defined keyspace.
-
-Syntax example:
-```
-biscuit brute-force --hash 660f2dd5a2e102002a444e862b511ac51a4dc6636a46edba79d62037c738b9f2 --algorithm sha256 --charset alphanumeric --min-length 4 --max-length 8
-```
-
-### Hash Generation
-
-Generate a hash from a given password and algorithm.
-
-Syntax example:
-```
-biscuit hash-gen --password <PASSWORD> --algorithm sha256
-```
-
-### Password Spraying
-
-Planned feature. Development has not started yet.
+*Currently supports only Linux.*
 
 ## Supported Algorithms
 
@@ -64,7 +37,7 @@ Currently supported:
 
 ## Character sets
 
-The tool uses ASCII character set by default.
+The tool uses ASCII character sets by default.
 
 Currently supported:
 - lowercase

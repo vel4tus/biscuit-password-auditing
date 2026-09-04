@@ -18,7 +18,6 @@ Modes:
   Attacks:
     dictionary, dict  {CONST.MODE_DICTIONARY_DESCRIPTION}
     brute-force, bf   {CONST.MODE_BRUTEFORCE_DESCRIPTION}
-    spray             {CONST.MODE_SPRAY_DESCRIPTION}
 
   Utilities:
     hash-gen, hg      {CONST.MODE_HASHGEN_DESCRIPTION}
@@ -31,7 +30,6 @@ Use 'biscuit <mode> --help' for more information about a specific mode.
 Examples:
   biscuit dictionary --hash <HASH> --algorithm sha256
   biscuit brute-force --hash <HASH> --algorithm sha256 --charset alphanumeric --min-length 6 --max-length 8
-  biscuit spray ...
   biscuit hash-gen --password <PASSWORD> --algorithm sha256'''
 
 
@@ -75,6 +73,11 @@ def bf_help() -> str:
                           --min-length <MIN_LENGTH> --max-length <MAX_LENGTH>
                           [--output <OUTPUT>]
 
+usage: biscuit bruteforce --benchmark --algorithm 
+                          {{{",".join(HASH_ALGORITHMS)}}} --charset 
+                          {{{",".join(CHARSET)}}}
+                          --min-length <MIN_LENGTH> --max-length <MAX_LENGTH>
+
 {CONST.MODE_BRUTEFORCE_DESCRIPTION}
 
 
@@ -94,6 +97,8 @@ Required arguments:
                         {CONST.ARGS_MAX_LENGTH_DESCRIPTION}
 
 Optional arguments:
+  --benchmark           {CONST.ARGS_BENCHMARK_DESCRIPTION}
+
   -o, --output <PATH>   {CONST.ARGS_OUTPUT_DESCRIPTION}
 
   -h, --help            {CONST.HELP_DESCRIPTION}
@@ -101,7 +106,8 @@ Optional arguments:
 examples:
   biscuit bruteforce --hash <hash> --algorithm sha256 --charset alphanumeric
   biscuit bruteforce --hash <hash> --algorithm sha256 --charset alphanumeric --min-length 4 --max-length 8
-  biscuit bruteforce --hash <hash> --algorithm sha256 --charset alphanumeric --min-length 6 --max-length 6'''
+  biscuit bruteforce --hash <hash> --algorithm sha256 --charset alphanumeric --min-length 6 --max-length 6
+  biscuit bf -a sha256 -c alphanumeric -m 3 -M 4 --benchmark'''
 
 
 def hg_help() -> str:

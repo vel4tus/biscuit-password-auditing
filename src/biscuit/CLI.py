@@ -28,9 +28,6 @@ dictionary_parser.add_argument("--hash", "-H")
 dictionary_parser.add_argument("--algorithm", "-a", choices=biscuit.config.HASH_ALGORITHMS)
 dictionary_parser.add_argument("--wordlist", "-w", default=DEFAULT_WORDLIST)
 dictionary_parser.add_argument("--output", "-o")
-# Salt support - WIP
-# dictionary_parser.add_argument("--salt")
-# dictionary_parser.add_argument("--salt-position", choices=["prefix", "suffix"], default="suffix")
 
 # Brute-force attack parser
 bruteforce_parser = subparsers.add_parser(name="brute-force", aliases=["bf"], add_help=False)
@@ -42,12 +39,6 @@ bruteforce_parser.add_argument("--min-length", "-m", type=int)
 bruteforce_parser.add_argument("--max-length", "-M", type=int)
 bruteforce_parser.add_argument("--output", "-o", metavar="PATH")
 bruteforce_parser.add_argument("--benchmark", action="store_true", dest="bruteforce_benchmark")
-# Salt support - WIP
-# dictionary_parser.add_argument("--salt")
-# dictionary_parser.add_argument("--salt-position", choices=["prefix", "suffix"], default="suffix")
-
-# Password spraying attack parser
-spray_parser = subparsers.add_parser(name="spray", add_help=False)
 
 # Hash generation parser
 hashgen_parser = subparsers.add_parser(name="hash-gen", aliases=["hg"], add_help=False)

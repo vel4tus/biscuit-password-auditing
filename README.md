@@ -37,7 +37,7 @@ Currently supported:
 
 ## Character sets
 
-The tool uses ASCII character sets by default.
+The tool's built-in character sets are based on printable ASCII characters.
 
 Currently supported:
 - lowercase
@@ -79,6 +79,10 @@ biscuit dictionary --help
 biscuit brute-force --help
 biscuit hash-gen --help
 ```
+
+## Development
+
+See the [development plan](docs/DEVELOPMENT.md) for planned features and ongoing work.
 
 ## Authorized use only
 

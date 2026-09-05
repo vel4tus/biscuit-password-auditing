@@ -1,7 +1,7 @@
 # Biscuit Development Plan
 
 - [x] Completed
-- [~] In progress
+- [ ] **In progress**
 - [ ] Planned
 
 ## Core Functionality
@@ -64,8 +64,8 @@ Supported algorithms:
   - [ ] Salted hash support
   - [x] Hash comparison
   - [x] Result handling
-  - [~] Parallelism
-  - [~] Benchmarking
+  - [ ] **Parallelism — in progress**
+  - [ ] **Benchmarking — in progress**
 
 ### Mask attack
 - [ ]
@@ -75,9 +75,9 @@ Supported algorithms:
 
 ## Performance
 
-- [~] Optimize multiprocessing and task scheduling
+- [ ] **Optimize multiprocessing and task scheduling — in progress**
 - [ ] Benchmark and tune chunking
-- [~] Reduce memory and IPC overhead
+- [ ] **Reduce memory and IPC overhead — in progress**
 - [ ] GPU acceleration
 
 ## Attack Management
